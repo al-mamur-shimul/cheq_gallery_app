@@ -1,11 +1,36 @@
-import 'package:cheq_gallery_app/albums_list/album_list.dart';
+import 'dart:async';
+
+import 'package:cheq_gallery_app/albums_list/view/album_list_page.dart';
 import 'package:cheq_gallery_app/common/asset_paths.dart';
 import 'package:cheq_gallery_app/common/colors.dart';
 import 'package:cheq_gallery_app/permission/permission.dart';
 import 'package:flutter/material.dart';
 
-class StoragePermissionNotFoundWidget extends StatelessWidget {
-  const StoragePermissionNotFoundWidget({super.key});
+class StoragePermissionNotFoundWidget extends StatefulWidget {
+  const StoragePermissionNotFoundWidget({
+    required this.onTap,
+    super.key,
+  });
+
+  final VoidCallback onTap;
+
+  @override
+  State<StoragePermissionNotFoundWidget> createState() =>
+      _StoragePermissionNotFoundWidgetState();
+}
+
+class _StoragePermissionNotFoundWidgetState
+    extends State<StoragePermissionNotFoundWidget> {
+  void _onPermissionStatusChanged(StoragePermissionState state) {
+    if (state is StoragePermissionGranted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (context) => const AlbumListPage(),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +46,7 @@ class StoragePermissionNotFoundWidget extends StatelessWidget {
           const SizedBox(height: 42),
           CustomButtonWidget(
             text: 'Grant Access',
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<void>(
-                  builder: (context) => const AlbumListPage(),
-                ),
-              );
-            },
+            onTap: widget.onTap,
           ),
         ],
       ),
@@ -70,4 +88,5 @@ class StoragePermissionNotFoundWidget extends StatelessWidget {
       ),
     );
   }
+
 }
