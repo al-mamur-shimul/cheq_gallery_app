@@ -34,6 +34,12 @@ class _AlbumListPageState extends State<AlbumListPage> {
   }
 
   @override
+  void dispose() {
+    fetchPhotoAlbumCubit.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(),
