@@ -7,9 +7,9 @@ Free gallery app for all
 
 ## Snapshots 📸
 #ios
-![ios-Home](screenshots/ios.png)
-![ios-Albums](screenshots/ios2.png)
-![ios-Photos](screenshots/ios3.png)
+<img src="screenshots/ios.png" alt="ios-Home" width="200"/>
+<img src="screenshots/ios2.png" alt="ios-Albums" width="200"/>
+<img src="screenshots/ios3.png" alt="ios-Photos" width="200"/>
 
 
 ## Getting Started 🚀
