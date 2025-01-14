@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:ui' as ui;
 
 import 'package:domain/entity/photo_list/photo.dart';
 import 'package:flutter/material.dart';
@@ -81,14 +83,28 @@ class _PhotoListPageState extends State<PhotoListPage> {
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: Container(
+        child: SizedBox(
           height: 85,
           width: 85,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: FileImage(File(imagePath)),
-              fit: BoxFit.cover,
-            ),
+          child: FutureBuilder<Uint8List>(
+            future: _generateThumbnail(imagePath),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                return Image.memory(
+                  snapshot.data!,
+                  fit: BoxFit.cover,
+                );
+              } else {
+                return Center(
+                  child: Icon(
+                    Icons.image,
+                    size: 32,
+                    color: Colors.blueGrey.shade400,
+                  ),
+                );
+              }
+            },
           ),
         ),
       ),
@@ -162,5 +178,22 @@ class _PhotoListPageState extends State<PhotoListPage> {
         ),
       );
     }
+  }
+
+  Future<Uint8List> _generateThumbnail(String imagePath) async {
+    final image = ResizeImage(
+      FileImage(File(imagePath)),
+      width: 85,
+      height: 85,
+    );
+    final completer = Completer<ui.Image>();
+    image.resolve(ImageConfiguration.empty).addListener(
+      ImageStreamListener((ImageInfo info, bool _) {
+        completer.complete(info.image);
+      }),
+    );
+    final uiImage = await completer.future;
+    final byteData = await uiImage.toByteData(format: ui.ImageByteFormat.png);
+    return byteData!.buffer.asUint8List();
   }
 }
