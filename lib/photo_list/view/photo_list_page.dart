@@ -13,6 +13,13 @@ class PhotoListPage extends StatefulWidget {
   });
 
   final MapEntry<String, List<Photo>> data;
+  static const path = '/photos';
+
+  static Route<void> route(MapEntry<String, List<Photo>> data) {
+    return MaterialPageRoute<void>(
+      builder: (_) => PhotoListPage(data: data),
+    );
+  }
 
   @override
   State<PhotoListPage> createState() => _PhotoListPageState();

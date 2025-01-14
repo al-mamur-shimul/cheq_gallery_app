@@ -57,9 +57,7 @@ class _StoragePermissionCheckingPageState
     if (state is StoragePermissionGranted) {
       Navigator.push(
         context,
-        MaterialPageRoute<void>(
-          builder: (context) => const AlbumListPage(),
-        ),
+        AlbumListPage.route(),
       );
     }
   }

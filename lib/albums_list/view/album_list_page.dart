@@ -11,6 +11,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AlbumListPage extends StatefulWidget {
   const AlbumListPage({super.key});
 
+  static const path = '/albums';
+
+  static Route<void> route() {
+    return MaterialPageRoute<void>(
+      builder: (_) => const AlbumListPage(),
+    );
+  }
+
   @override
   State<AlbumListPage> createState() => _AlbumListPageState();
 }
@@ -93,11 +101,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute<void>(
-            builder: (context) => PhotoListPage(
-              data: album,
-            ),
-          ),
+          PhotoListPage.route(album),
         );
       },
       child: ClipRRect(
