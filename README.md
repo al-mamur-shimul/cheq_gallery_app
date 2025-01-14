@@ -8,14 +8,18 @@ Free gallery app for all
 ## Snapshots 📸
 
 # android
-<img src="screenshots/android.png" alt="android-Home" width="200"/>
-<img src="screenshots/android-2.png" alt="android-Albums" width="200"/>
-<img src="screenshots/android-3.png" alt="android-Photos" width="200"/>
+<p float="left">
+  <img src="screenshots/android.png" alt="android-Home" width="200"/>
+  <img src="screenshots/android-2.png" alt="android-Albums" width="200"/>
+  <img src="screenshots/android-3.png" alt="android-Photos" width="200"/>
+</p>
 
 # ios
-<img src="screenshots/ios.png" alt="ios-Home" width="200"/>
-<img src="screenshots/ios2.png" alt="ios-Albums" width="200"/>
-<img src="screenshots/ios3.png" alt="ios-Photos" width="200"/>
+<p float="left">
+  <img src="screenshots/ios.png" alt="ios-Home" width="200"/>
+  <img src="screenshots/ios2.png" alt="ios-Albums" width="200"/>
+  <img src="screenshots/ios3.png" alt="ios-Photos" width="200"/>
+</p>
 
 
 ## Getting Started 🚀
