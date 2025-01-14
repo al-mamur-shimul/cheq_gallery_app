@@ -1,3 +1,4 @@
+import 'package:cheq_gallery_app/albums_list/album_list.dart';
 import 'package:cheq_gallery_app/common/asset_paths.dart';
 import 'package:cheq_gallery_app/common/colors.dart';
 import 'package:cheq_gallery_app/permission/permission.dart';
@@ -20,7 +21,14 @@ class StoragePermissionNotFoundWidget extends StatelessWidget {
           const SizedBox(height: 42),
           CustomButtonWidget(
             text: 'Grant Access',
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(
+                  builder: (context) => const AlbumListPage(),
+                ),
+              );
+            },
           ),
         ],
       ),
