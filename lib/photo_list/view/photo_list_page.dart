@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:cheq_gallery_app/photo_preview/photo_preview.dart';
 import 'package:domain/entity/photo_list/photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,13 +27,6 @@ class PhotoListPage extends StatefulWidget {
 }
 
 class _PhotoListPageState extends State<PhotoListPage> {
-  bool isPhotoPreviewDialogVisible = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -103,13 +97,7 @@ class _PhotoListPageState extends State<PhotoListPage> {
                   fit: BoxFit.cover,
                 );
               } else {
-                return Center(
-                  child: Icon(
-                    Icons.image,
-                    size: 32,
-                    color: Colors.blueGrey.shade400,
-                  ),
-                );
+                return _buildLoadingPlaceholder();
               }
             },
           ),
@@ -118,73 +106,18 @@ class _PhotoListPageState extends State<PhotoListPage> {
     );
   }
 
+  Center _buildLoadingPlaceholder() {
+    return Center(
+      child: Icon(
+        Icons.image,
+        size: 32,
+        color: Colors.blueGrey.shade400,
+      ),
+    );
+  }
+
   void _onPhotoItemTap(BuildContext context, String imagePath) {
-    isPhotoPreviewDialogVisible = true;
-    _updateStatusBar();
-    _showPhotoPreviewDialog(context, imagePath);
-  }
-
-  void _showPhotoPreviewDialog(BuildContext context, String imagePath) {
-    showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          insetPadding: EdgeInsets.zero,
-          child: _buildDialogBody(imagePath, context),
-        );
-      },
-    );
-  }
-
-  Container _buildDialogBody(String imagePath, BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      color: Colors.black,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.file(
-            File(imagePath),
-            fit: BoxFit.fitWidth,
-          ),
-          _buildCloseButton(context),
-        ],
-      ),
-    );
-  }
-
-  Positioned _buildCloseButton(BuildContext context) {
-    return Positioned(
-      top: 16,
-      left: 16,
-      child: IconButton(
-        icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-        onPressed: () {
-          isPhotoPreviewDialogVisible = false;
-          _updateStatusBar();
-          Navigator.of(context).pop();
-        },
-      ),
-    );
-  }
-
-  void _updateStatusBar() {
-    if (isPhotoPreviewDialogVisible) {
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          statusBarColor: Colors.black,
-          statusBarIconBrightness: Brightness.light,
-        ),
-      );
-    } else {
-      SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark,
-        ),
-      );
-    }
+    Navigator.push(context, PhotoPreviewPage.route(imagePath));
   }
 
   Future<Uint8List> _generateThumbnail(String imagePath) async {
