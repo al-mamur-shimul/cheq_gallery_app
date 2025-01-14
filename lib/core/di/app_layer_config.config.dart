@@ -14,6 +14,7 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:injectable/injectable.dart' as _i526;
 
 import '../../albums_list/cubit/fetch_photo_album_cubit.dart' as _i188;
+import '../../permission/cubit/storage_permission_cubit.dart' as _i1013;
 import 'use_case_module.dart' as _i1054;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -28,6 +29,8 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final useCaseModule = _$UseCaseModule();
+    gh.factory<_i1013.StoragePermissionCubit>(
+        () => _i1013.StoragePermissionCubit());
     gh.singleton<_i437.DataLayer>(
         () => useCaseModule.provideDataLayer(gh<_i437.PhotoDataSource>()));
     gh.singleton<_i494.FetchPhotosGroupedByAlbumsUseCase>(() =>

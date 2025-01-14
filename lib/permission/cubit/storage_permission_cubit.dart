@@ -3,8 +3,10 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:cheq_gallery_app/permission/cubit/storage_permission_state.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:injectable/injectable.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+@injectable
 class StoragePermissionCubit extends Cubit<StoragePermissionState> {
   StoragePermissionCubit() : super(StoragePermissionInitial());
 

@@ -1,4 +1,5 @@
 import 'package:cheq_gallery_app/albums_list/view/album_list_page.dart';
+import 'package:cheq_gallery_app/core/di/app_layer_config.dart';
 import 'package:cheq_gallery_app/permission/permission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,8 @@ class _StoragePermissionCheckingPageState
   @override
   void initState() {
     super.initState();
-    storagePermissionCubit = StoragePermissionCubit()..requestPermission();
+    storagePermissionCubit = sl.get<StoragePermissionCubit>()
+      ..requestPermission();
   }
 
   @override
