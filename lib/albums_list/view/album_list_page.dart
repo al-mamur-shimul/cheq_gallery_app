@@ -1,10 +1,25 @@
-import 'package:cheq_gallery_app/common/asset_paths.dart';
+import 'dart:io';
+
 import 'package:cheq_gallery_app/common/colors.dart';
+import 'package:cheq_gallery_app/common/gallery_images.dart';
 import 'package:cheq_gallery_app/photo_list/view/photo_list_page.dart';
 import 'package:flutter/material.dart';
 
-class AlbumListPage extends StatelessWidget {
+class AlbumListPage extends StatefulWidget {
   const AlbumListPage({super.key});
+
+  @override
+  State<AlbumListPage> createState() => _AlbumListPageState();
+}
+
+class _AlbumListPageState extends State<AlbumListPage> {
+  Map<String, List<String>> deviceImagesGroupedByAlbum = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDeviceImages();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +53,29 @@ class AlbumListPage extends StatelessWidget {
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
         ),
+        itemCount: deviceImagesGroupedByAlbum.length,
         itemBuilder: (context, index) {
-          return _buildAlbumGridItem(context);
+          return _buildAlbumGridItem(
+            context,
+            deviceImagesGroupedByAlbum.entries.elementAt(index),
+          );
         },
       ),
     );
   }
 
-  Widget _buildAlbumGridItem(BuildContext context) {
+  Widget _buildAlbumGridItem(
+    BuildContext context,
+    MapEntry<String, List<String>> album,
+  ) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-            builder: (context) => const PhotoListPage(),
+            builder: (context) =>  PhotoListPage(
+              data: album,
+            ),
           ),
         );
       },
@@ -60,8 +84,8 @@ class AlbumListPage extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            image: const DecorationImage(
-              image: AssetImage(AssetPaths.people),
+            image: DecorationImage(
+              image: FileImage(File(album.value.first)),
               fit: BoxFit.cover,
             ),
           ),
@@ -72,7 +96,7 @@ class AlbumListPage extends StatelessWidget {
                 width: double.infinity,
                 color: Colors.black.withOpacity(0.5),
               ),
-              _buildAlbumDetails(),
+              _buildAlbumDetails(album.key, album.value.length),
             ],
           ),
         ),
@@ -80,27 +104,27 @@ class AlbumListPage extends StatelessWidget {
     );
   }
 
-  Positioned _buildAlbumDetails() {
-    return const Positioned(
+  Positioned _buildAlbumDetails(String name, int photoCount) {
+    return Positioned(
       bottom: 0,
       left: 0,
       right: 0,
       child: Padding(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Album Name',
-              style: TextStyle(
+              name,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
                 fontWeight: FontWeight.w400,
               ),
             ),
             Text(
-              '10 Photos',
-              style: TextStyle(
+              '$photoCount Photos',
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -121,5 +145,10 @@ class AlbumListPage extends StatelessWidget {
         color: AppColors.largeHeadingTextColor,
       ),
     );
+  }
+
+  Future<void> _fetchDeviceImages() async {
+    deviceImagesGroupedByAlbum = await GalleryImages.fetchDeviceImages();
+    setState(() {});
   }
 }

@@ -1,9 +1,15 @@
-import 'package:cheq_gallery_app/common/asset_paths.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class PhotoListPage extends StatefulWidget {
-  const PhotoListPage({super.key});
+  const PhotoListPage({
+    required this.data,
+    super.key,
+  });
+
+  final MapEntry<String, List<String>> data;
 
   @override
   State<PhotoListPage> createState() => _PhotoListPageState();
@@ -22,7 +28,7 @@ class _PhotoListPageState extends State<PhotoListPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Album Name'),
+        title: Text(widget.data.key),
         backgroundColor: Colors.white,
         centerTitle: true,
         leading: InkWell(
@@ -58,56 +64,69 @@ class _PhotoListPageState extends State<PhotoListPage> {
           mainAxisSpacing: 6,
           crossAxisSpacing: 6,
         ),
-        itemCount: 20,
+        itemCount: widget.data.value.length,
         // Example item count
         itemBuilder: (context, index) {
-          return _buildPhotoListItem(context);
+          return _buildPhotoListItem(context, widget.data.value[index]);
         },
       ),
     );
   }
 
-  Widget _buildPhotoListItem(BuildContext context) {
+  Widget _buildPhotoListItem(BuildContext context, String imagePath) {
     return InkWell(
       onTap: () {
-        isPhotoPreviewDialogVisible = true;
-        _updateStatusBar();
-        _showPhotoPreviewDialog(context);
+        _onPhotoItemTap(context, imagePath);
       },
-      child: Container(
-        height: 85,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AssetPaths.people),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          height: 85,
+          width: 85,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: FileImage(File(imagePath)),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
       ),
     );
   }
 
-  void _showPhotoPreviewDialog(BuildContext context) {
+  void _onPhotoItemTap(BuildContext context, String imagePath) {
+    isPhotoPreviewDialogVisible = true;
+    _updateStatusBar();
+    _showPhotoPreviewDialog(context, imagePath);
+  }
+
+  void _showPhotoPreviewDialog(BuildContext context, String imagePath) {
     showDialog<void>(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
           insetPadding: EdgeInsets.zero,
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            color: Colors.black,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.asset(
-                  AssetPaths.chair,
-                  fit: BoxFit.fitWidth,
-                ),
-                _buildCloseButton(context),
-              ],
-            ),
-          ),
+          child: _buildDialogBody(imagePath, context),
         );
       },
+    );
+  }
+
+  Container _buildDialogBody(String imagePath, BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.black,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.file(
+            File(imagePath),
+            fit: BoxFit.fitWidth,
+          ),
+          _buildCloseButton(context),
+        ],
+      ),
     );
   }
 
