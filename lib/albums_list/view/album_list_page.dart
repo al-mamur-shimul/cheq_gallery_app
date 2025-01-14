@@ -1,5 +1,6 @@
 import 'package:cheq_gallery_app/common/asset_paths.dart';
 import 'package:cheq_gallery_app/common/colors.dart';
+import 'package:cheq_gallery_app/photo_list/view/photo_list_page.dart';
 import 'package:flutter/material.dart';
 
 class AlbumListPage extends StatelessWidget {
@@ -38,32 +39,42 @@ class AlbumListPage extends StatelessWidget {
           mainAxisSpacing: 8,
         ),
         itemBuilder: (context, index) {
-          return _buildAlbumGridItem();
+          return _buildAlbumGridItem(context);
         },
       ),
     );
   }
 
-  ClipRRect _buildAlbumGridItem() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          image: const DecorationImage(
-            image: AssetImage(AssetPaths.people),
-            fit: BoxFit.cover,
+  Widget _buildAlbumGridItem(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute<void>(
+            builder: (context) => const PhotoListPage(),
           ),
-        ),
-        child: Stack(
-          children: [
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: Colors.black.withOpacity(0.5),
+        );
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            image: const DecorationImage(
+              image: AssetImage(AssetPaths.people),
+              fit: BoxFit.cover,
             ),
-            _buildAlbumDetails(),
-          ],
+          ),
+          child: Stack(
+            children: [
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              _buildAlbumDetails(),
+            ],
+          ),
         ),
       ),
     );
