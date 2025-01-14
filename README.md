@@ -5,6 +5,13 @@ Free gallery app for all
 
 ---
 
+## Snapshots 📸
+#ios
+![ios-Home](screenshots/ios.png)
+![ios-Albums](screenshots/ios2.png)
+![ios-Photos](screenshots/ios3.png)
+
+
 ## Getting Started 🚀
 
 This project contains 3 flavors:
