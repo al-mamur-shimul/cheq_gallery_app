@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:cheq_gallery_app/common/logger.dart';
+import 'package:cheq_gallery_app/config/env.dart';
 import 'package:flutter/widgets.dart';
 
 class AppBlocObserver extends BlocObserver {
@@ -20,12 +22,16 @@ class AppBlocObserver extends BlocObserver {
   }
 }
 
-Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
+Future<void> bootstrap(FutureOr<Widget> Function() builder, Env env) async {
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
   };
 
-  Bloc.observer = const AppBlocObserver();
+  Log.i('Environment initialized!');
+
+  if (Env.value.showLogs) {
+    Bloc.observer = const AppBlocObserver();
+  }
 
   // Add cross-flavor configuration here
 

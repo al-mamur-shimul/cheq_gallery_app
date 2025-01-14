@@ -1,9 +1,12 @@
 import 'dart:io';
 
+import 'package:cheq_gallery_app/albums_list/cubit/fetch_photo_album_cubit.dart';
 import 'package:cheq_gallery_app/common/colors.dart';
-import 'package:cheq_gallery_app/common/gallery_images.dart';
+import 'package:cheq_gallery_app/core/di/app_layer_config.dart';
 import 'package:cheq_gallery_app/photo_list/view/photo_list_page.dart';
+import 'package:domain/domain.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AlbumListPage extends StatefulWidget {
   const AlbumListPage({super.key});
@@ -13,12 +16,13 @@ class AlbumListPage extends StatefulWidget {
 }
 
 class _AlbumListPageState extends State<AlbumListPage> {
-  Map<String, List<String>> deviceImagesGroupedByAlbum = {};
+  late FetchPhotoAlbumCubit fetchPhotoAlbumCubit;
 
   @override
   void initState() {
     super.initState();
-    _fetchDeviceImages();
+    fetchPhotoAlbumCubit = sl.get<FetchPhotoAlbumCubit>();
+    fetchPhotoAlbumCubit.fetchPhotosGroupedByAlbums();
   }
 
   @override
@@ -47,18 +51,36 @@ class _AlbumListPageState extends State<AlbumListPage> {
 
   Expanded _buildAlbumGridView() {
     return Expanded(
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-        itemCount: deviceImagesGroupedByAlbum.length,
-        itemBuilder: (context, index) {
-          return _buildAlbumGridItem(
-            context,
-            deviceImagesGroupedByAlbum.entries.elementAt(index),
-          );
+      child: BlocBuilder<FetchPhotoAlbumCubit, FetchPhotoAlbumState>(
+        bloc: fetchPhotoAlbumCubit,
+        builder: (context, state) {
+          if (state is FetchPhotoAlbumInProgress) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is FetchPhotoAlbumFailure) {
+            return Center(
+              child: Text(state.error),
+            );
+          } else if (state is FetchPhotoAlbumSuccess) {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: state.photosGroupedByAlbums.length,
+              itemBuilder: (context, index) {
+                return _buildAlbumGridItem(
+                  context,
+                  state.photosGroupedByAlbums.entries.elementAt(index),
+                );
+              },
+            );
+            ;
+          } else {
+            return const SizedBox.shrink();
+          }
         },
       ),
     );
@@ -66,14 +88,14 @@ class _AlbumListPageState extends State<AlbumListPage> {
 
   Widget _buildAlbumGridItem(
     BuildContext context,
-    MapEntry<String, List<String>> album,
+    MapEntry<String, List<Photo>> album,
   ) {
     return InkWell(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute<void>(
-            builder: (context) =>  PhotoListPage(
+            builder: (context) => PhotoListPage(
               data: album,
             ),
           ),
@@ -85,7 +107,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
-              image: FileImage(File(album.value.first)),
+              image: FileImage(File(album.value.first.path)),
               fit: BoxFit.cover,
             ),
           ),
@@ -145,10 +167,5 @@ class _AlbumListPageState extends State<AlbumListPage> {
         color: AppColors.largeHeadingTextColor,
       ),
     );
-  }
-
-  Future<void> _fetchDeviceImages() async {
-    deviceImagesGroupedByAlbum = await GalleryImages.fetchDeviceImages();
-    setState(() {});
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:domain/entity/photo_list/photo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -9,7 +10,7 @@ class PhotoListPage extends StatefulWidget {
     super.key,
   });
 
-  final MapEntry<String, List<String>> data;
+  final MapEntry<String, List<Photo>> data;
 
   @override
   State<PhotoListPage> createState() => _PhotoListPageState();
@@ -67,7 +68,7 @@ class _PhotoListPageState extends State<PhotoListPage> {
         itemCount: widget.data.value.length,
         // Example item count
         itemBuilder: (context, index) {
-          return _buildPhotoListItem(context, widget.data.value[index]);
+          return _buildPhotoListItem(context, widget.data.value[index].path);
         },
       ),
     );
