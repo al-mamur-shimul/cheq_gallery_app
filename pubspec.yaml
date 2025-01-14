@@ -10,7 +10,7 @@ dependencies:
   bloc: ^8.1.4
   data:
     path: ./data/
-  device_info_plus: ^11.2.0
+  device_info_plus: ^11.2.1
   domain:
     path: ./domain/
   equatable: ^2.0.7
