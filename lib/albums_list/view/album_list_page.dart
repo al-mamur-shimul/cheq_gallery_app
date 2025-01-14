@@ -77,7 +77,6 @@ class _AlbumListPageState extends State<AlbumListPage> {
                 );
               },
             );
-            ;
           } else {
             return const SizedBox.shrink();
           }
@@ -116,6 +115,7 @@ class _AlbumListPageState extends State<AlbumListPage> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
+                // ignore: deprecated_member_use
                 color: Colors.black.withOpacity(0.5),
               ),
               _buildAlbumDetails(album.key, album.value.length),

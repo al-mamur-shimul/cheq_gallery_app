@@ -1,4 +1,4 @@
-// test/album_list/cubit/fetch_photo_album_cubit_test.dart
+
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:cheq_gallery_app/albums_list/cubit/fetch_photo_album_cubit.dart';
@@ -25,7 +25,7 @@ void main() {
     });
 
     blocTest<FetchPhotoAlbumCubit, FetchPhotoAlbumState>(
-      'emits [FetchPhotoAlbumInProgress, FetchPhotoAlbumSuccess] when fetch is successful',
+      '''emits [FetchPhotoAlbumInProgress, FetchPhotoAlbumSuccess] when fetch is successful''',
       build: () {
         when(() => mockFetchPhotoAlbumUseCase.call()).thenAnswer(
           (_) async => const Left({}),
@@ -43,7 +43,7 @@ void main() {
       'emits [FetchPhotoAlbumInProgress, FetchPhotoAlbumFailure] when fetch fails',
       build: () {
         when(() => mockFetchPhotoAlbumUseCase.call()).thenAnswer(
-              (_) async => const Right('Failed to fetch'),
+          (_) async => const Right('Failed to fetch'),
         );
         return fetchPhotoAlbumCubit;
       },

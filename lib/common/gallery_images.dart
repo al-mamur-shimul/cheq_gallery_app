@@ -22,7 +22,7 @@ class GalleryImages {
         deviceImages[key] = images;
       });
       return deviceImages;
-    } on PlatformException catch (e) {
+    } on PlatformException catch (_) {
       return {};
     }
   }
