@@ -12,6 +12,7 @@ class PhotoDataSourceImpl implements PhotoDataSource {
       final result = await channel.invokeMethod<Map<dynamic, dynamic>>(
         methodName,
       );
+
       final map = result?.cast<String, List<dynamic>>();
       map?.forEach((key, value) {
         final images = <String>[];
